@@ -9,6 +9,10 @@
 /test/tmp/
 /test/version_tmp/
 /tmp/
+/.cache/.iOSLastModified
+/.cache/.androidLastModified
+/config/config.yml
+/config/android_publisher_key.json
 
 # Used by dotenv library to load environment variables.
 # .env
