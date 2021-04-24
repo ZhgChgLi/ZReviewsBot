@@ -1,0 +1,15 @@
+iOS:
+    appID: 'iOS APP ID'
+    appleID: 'APP Store Connect Apple ID (email)'
+    password: 'APP Store Connect Apple ID Password'
+    notifyWebHookUrl: 'slack webhook url for iOS new rewview message'
+    icon_emoji: ':dog:'
+    username: 'ZReview Bot'
+android:
+    packageName: 'Android Package Name'
+    jsonKeyFileName: 'android_publisher_key.json'
+    notifyWebHookUrl: 'slack webhook url for android new rewview message'
+    icon_emoji: ':dog:'
+    username: 'ZReview Bot'
+developer:
+    notifyWebHookUrl: 'slack webhook url for iOS debug/error message'
