@@ -1,47 +1,20 @@
-require 'yaml'
 require "Spaceship"
-require 'date'
 require "#{__dir__}/SpaceshipExtension.rb"
 require "#{__dir__}/Slack.rb"
 require "#{__dir__}/Developer.rb"
 
 class AppStore
-  attr_accessor :appID, :appleID, :password, :notifyWebHookUrl, :icon_emoji, :username
+  attr_accessor :path, :appID, :appleID, :password, :notifyWebHookUrl, :iconEmoji, :username, :cacheFile, :ignoreKeywords
 
-  def initialize(configFilePath)
-    if !File.exists?(configFilePath)
-      raise "Config file not found at #{configFilePath}"
-    end
-    config = OpenStruct.new(YAML.load_file(configFilePath))
-
-    if config.iOS == nil
-      raise "iOS node not found at #{configFilePath}"
-    end
-    if config.iOS['appID'] == nil
-      raise "appID not found in iOS node at #{configFilePath}"
-    end
-    if config.iOS['appleID'] == nil
-      raise "appleID not found in iOS node at #{configFilePath}"
-    end
-    if config.iOS['password'] == nil
-      raise "password not found in iOS node at #{configFilePath}"
-    end
-    if config.iOS['notifyWebHookUrl'] == nil
-      raise "notifyWebHookUrl not found in iOS node at #{configFilePath}"
-    end
-    if config.iOS['icon_emoji'] == nil
-      raise "icon_emoji not found in iOS node at #{configFilePath}"
-    end
-    if config.iOS['username'] == nil
-      raise "username not found in iOS node at #{configFilePath}"
-    end
-
-    @appID = config.iOS['appID']
-    @appleID = config.iOS['appleID']
-    @password = config.iOS['password']
-    @notifyWebHookUrl = config.iOS['notifyWebHookUrl']
-    @icon_emoji = config.iOS['icon_emoji']
-    @username = config.iOS['username']
+  def initialize(iOS)
+    @appID = iOS['appID']
+    @appleID = iOS['appleID']
+    @password = iOS['password']
+    @notifyWebHookUrl = iOS['notifyWebHookUrl']
+    @iconEmoji = iOS['iconEmoji']
+    @username = iOS['username']
+    @ignoreKeywords = iOS['ignoreKeywords']
+    @cacheFile = File.expand_path(".cache/.iOSLastModified")
   end
 
   def run()
@@ -68,7 +41,7 @@ class AppStore
           newLastModified = remoteReview["value"]["lastModified"]
         end
 
-        if remoteReview["value"]["lastModified"] > lastModified * 1000 && lastModified != 0
+        if remoteReview["value"]["lastModified"] > lastModified && lastModified != 0
           reviews.append(remoteReview["value"])
         else
           breakWhile = false
@@ -81,23 +54,32 @@ class AppStore
     sendMessagesToSlack(reviews)
     saveLastModified(newLastModified)
 
+    return lastModified
   end
 
   def sendMessagesToSlack(reviews)
     slack = Slack.new(notifyWebHookUrl)
-  
+    
     reviews.each { |review|
+      ignore = false
+      ignoreKeywords.each { |ignoreKeyword|
+        if review["review"].include? ignoreKeyword
+          ignore = true
+        end
+      }
+      next if ignore
+
       rating = review["rating"].to_i
       color = rating >= 4 ? "good" : (rating >= 2 ? "warning" : "danger")
       like = review["helpfulViews"].to_i > 0 ? " - #{review["helpfulViews"]} :thumbsup:" : ""
       date = review["edited"] == false ? "Created at: #{Time.at(review["lastModified"].to_i / 1000).to_datetime}" : "Updated at: #{Time.at(review["lastModified"].to_i / 1000).to_datetime}"
 
-      hasResponse = ""
+      replyOutdated = ""
       if review["developerResponse"] != nil && review["developerResponse"]['lastModified'] < review["lastModified"]
-        hasResponse = " (Customer Support Reply outdated)"
+        replyOutdated = I18n.t('appStore.support_reply_outdated')
       end
 
-      edited = review["edited"] == false ? "" : ":memo: User has updated review#{hasResponse}："
+      edited = review["edited"] == false ? "" : I18n.t('appStore.review_has_updated', :replyOutdated => replyOutdated)
       stars = "★" * rating + "☆" * (5 - rating)
 
       attachment = Slack::Payload::Attachment.new
@@ -111,19 +93,18 @@ class AppStore
       attachment.footer = "iOS - v#{review["appVersionString"]} - #{review["storeFront"]} - #{date} - <https://appstoreconnect.apple.com/apps/557252416/appstore/activity/ios/ratingsResponses|Go To App Store>"
       
       payload = Slack::Payload.new
-      payload.icon_emoji = icon_emoji
+      payload.icon_emoji = iconEmoji
       payload.username = username
       payload.attachments = [attachment]
 
       slack.pushMessage(payload)
-      puts "Send #{review["id"]} notifications to slack."
     }
  
   end
 
   def getLastModified() 
-    if File.exists?("#{__dir__}/../.cache/.iOSLastModified")
-      lastModifiedFile = File.open("#{__dir__}/../.cache/.iOSLastModified")
+    if File.exists?(cacheFile)
+      lastModifiedFile = File.open(cacheFile)
       return lastModifiedFile.read.to_i
     else
       return 0
@@ -131,7 +112,7 @@ class AppStore
   end
 
   def saveLastModified(lastModified)
-    File.write("#{__dir__}/../.cache/.iOSLastModified", lastModified, mode: "w+")
+    File.write(cacheFile, lastModified, mode: "w+")
   end
 
   private :getLastModified, :saveLastModified

@@ -1,0 +1,119 @@
+require "./lib/AppStore"
+require "./lib/GooglePlay"
+require "./lib/Developer"
+require 'I18n'
+
+def main()
+    #Check Config File
+
+    I18n.load_path << Dir[File.expand_path("locales") + "/*.yml"]
+    I18n.default_locale = 'en'
+
+    configFilePath = File.expand_path("config/config.yml")
+    if !File.exists?(configFilePath)
+        raise I18n.t('error.config_file_not_found', :path => configFilePath)
+    end
+    config = OpenStruct.new(YAML.load_file(configFilePath))
+
+    if !Dir.exist?(File.expand_path(".cache/"))
+        raise I18n.t('error.cache_dir_not_exists', :path => File.expand_path(".cache/"))
+    end
+
+    if config.setting == nil
+        raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'setting')
+    end
+
+    if config.setting['developerNotifyWebHookUrl'] == nil
+        raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'setting.developerNotifyWebHookUrl')
+    end
+
+    developer = Developer.new(config.setting)
+
+    begin
+        if config.setting['lang'] != nil
+            if I18n.locale_available?(config.setting['lang'])
+                I18n.default_locale = config.setting['lang']
+            else
+                raise I18n.t('error.specify_language_unsupport', :lang => config.setting['lang'])
+            end
+        end
+
+        if ARGV[0] != nil
+            platform = ARGV[0].downcase
+        else
+            platform = ''
+        end
+
+        if platform == 'android'
+            if config.android == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android')
+            end
+            if config.android['packageName'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.packageName')
+            end
+            if config.android['jsonKeyFileName'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.jsonKeyFileName')
+            end
+            if config.android['notifyWebHookUrl'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.notifyWebHookUrl')
+            end
+            if config.android['iconEmoji'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.iconEmoji')
+            end
+            if config.android['username'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.username')
+            end
+            if config.android['ignoreKeywords'] != nil and !config.android['ignoreKeywords'].kind_of?(Array)
+                raise I18n.t('error.config_parameter_error', :path => configFilePath, :parameter => 'android.ignoreKeywords')
+            end
+
+            appStore = GooglePlay.new(config.android)
+            result = appStore.run()
+
+            if result == 0
+                developer.sendWelcomeMessageToSlack('Android')
+            end
+        elsif platform == 'ios'
+            if config.iOS == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS')
+            end
+            if config.iOS['appID'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.appID')
+            end
+            if config.iOS['appleID'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.appleID')
+            end
+            if config.iOS['password'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.password')
+            end
+            if config.iOS['notifyWebHookUrl'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.notifyWebHookUrl')
+            end
+            if config.iOS['iconEmoji'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.iconEmoji')
+            end
+            if config.iOS['username'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.username')
+            end
+            if config.iOS['username'] == nil
+                raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.username')
+            end
+            if config.iOS['ignoreKeywords'] != nil and !config.iOS['ignoreKeywords'].kind_of?(Array)
+                raise I18n.t('error.config_parameter_error', :path => configFilePath, :parameter => 'iOS.ignoreKeywords')
+            end
+
+            appStore = AppStore.new(config.iOS)
+            result = appStore.run()
+
+            if result == 0
+                developer.sendWelcomeMessageToSlack('iOS')
+            end
+        else
+            raise I18n.t('error.unknow_platform', :platform => ARGV[0])
+        end
+    rescue => error
+        developer.sendMessagesToSlack(error)
+    end
+end
+
+main()

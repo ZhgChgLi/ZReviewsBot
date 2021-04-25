@@ -4,38 +4,16 @@ require "#{__dir__}/Slack.rb"
 require "#{__dir__}/Developer.rb"
 
 class GooglePlay
-  attr_accessor :packageName, :jsonKeyFileName, :notifyWebHookUrl, :icon_emoji, :username
+  attr_accessor :packageName, :jsonKeyFileName, :notifyWebHookUrl, :iconEmoji, :username, :cacheFile, :ignoreKeywords
 
-  def initialize(configFilePath)
-    if !File.exists?(configFilePath)
-      raise "Config file not found at #{configFilePath}"
-    end
-    config = OpenStruct.new(YAML.load_file(configFilePath))
-
-    if config.android == nil
-      raise "android node not found at #{configFilePath}"
-    end
-    if config.android['packageName'] == nil
-      raise "packageName not found in android node at #{configFilePath}"
-    end
-    if config.android['jsonKeyFileName'] == nil
-      raise "jsonKeyFileName not found in android node at #{configFilePath}"
-    end
-    if config.android['notifyWebHookUrl'] == nil
-      raise "notifyWebHookUrl not found in android node at #{configFilePath}"
-    end
-    if config.android['icon_emoji'] == nil
-      raise "icon_emoji not found in android node at #{configFilePath}"
-    end
-    if config.android['username'] == nil
-      raise "username not found in android node at #{configFilePath}"
-    end
-
-    @packageName = config.android['packageName']
-    @jsonKeyFileName = config.android['jsonKeyFileName']
-    @notifyWebHookUrl = config.android['notifyWebHookUrl']
-    @icon_emoji = config.android['icon_emoji']
-    @username = config.android['username']
+  def initialize(android)
+    @packageName = android['packageName']
+    @jsonKeyFileName = android['jsonKeyFileName']
+    @notifyWebHookUrl = android['notifyWebHookUrl']
+    @iconEmoji = android['iconEmoji']
+    @username = android['username']
+    @ignoreKeywords = android['ignoreKeywords']
+    @cacheFile = File.expand_path(".cache/.androidLastModified")
   end
 
   def run()
@@ -78,12 +56,22 @@ class GooglePlay
     reviews.sort! { |a, b|  a["lastModified"] <=> b["lastModified"] }
     sendMessagesToSlack(reviews)
     saveLastModified(newLastModified)
+
+    return lastModified
   end
 
   def sendMessagesToSlack(reviews)
     slack = Slack.new(notifyWebHookUrl)
   
     reviews.each { |review|
+      ignore = false
+      ignoreKeywords.each { |ignoreKeyword|
+        if review["text"].include? ignoreKeyword
+          ignore = true
+        end
+      }
+      next if ignore
+
       rating = review["starRating"]
       color = rating >= 4 ? "good" : (rating >= 2 ? "warning" : "danger")
       date = "Created at: #{Time.at(review["lastModified"]).to_datetime}"
@@ -100,19 +88,18 @@ class GooglePlay
       attachment.footer = "Android(#{review["androidOsVersion"]}) - v#{review["appVersionName"]}(#{review["appVersionCode"]}) - #{review["reviewerLanguage"]} - #{date} - <https://play.google.com/store/apps/details?id=#{packageName}&reviewId=#{review["reviewId"]}|Go To Google Play>"
       
       payload = Slack::Payload.new
-      payload.icon_emoji = icon_emoji
+      payload.icon_emoji = iconEmoji
       payload.username = username
       payload.attachments = [attachment]
 
       slack.pushMessage(payload)
-      puts "Send #{review["reviewId"]} notifications to slack."
     }
  
   end
 
   def getLastModified() 
-    if File.exists?("#{__dir__}/../.cache/.androidLastModified")
-      lastModifiedFile = File.open("#{__dir__}/../.cache/.androidLastModified")
+    if File.exists?(cacheFile)
+      lastModifiedFile = File.open(cacheFile)
       return lastModifiedFile.read.to_i
     else
       return 0
@@ -120,7 +107,7 @@ class GooglePlay
   end
 
   def saveLastModified(lastModified)
-    File.write("#{__dir__}/../.cache/.androidLastModified", lastModified, mode: "w+")
+    File.write(cacheFile, lastModified, mode: "w+")
   end
 
   private :getLastModified, :saveLastModified
