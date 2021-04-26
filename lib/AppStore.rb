@@ -1,3 +1,5 @@
+$lib = File.expand_path('../lib', File.dirname(__FILE__))
+
 require "Spaceship"
 require "SpaceshipExtension.rb"
 require "Slack.rb"
@@ -14,7 +16,7 @@ class AppStore
     @iconEmoji = iOS['iconEmoji']
     @username = iOS['username']
     @ignoreKeywords = iOS['ignoreKeywords']
-    @cacheFile = File.expand_path(".cache/.iOSLastModified")
+    @cacheFile = "#{$lib}/.cache/.iOSLastModified"
   end
 
   def run()

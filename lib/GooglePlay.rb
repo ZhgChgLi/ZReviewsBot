@@ -1,25 +1,27 @@
+$lib = File.expand_path('../lib', File.dirname(__FILE__))
+
 require 'google/apis/androidpublisher_v3'
 require 'googleauth'
 require "Slack.rb"
 require "Developer.rb"
 
 class GooglePlay
-  attr_accessor :packageName, :jsonKeyFileName, :notifyWebHookUrl, :iconEmoji, :username, :cacheFile, :ignoreKeywords
+  attr_accessor :packageName, :jsonKeyFilePath, :notifyWebHookUrl, :iconEmoji, :username, :cacheFile, :ignoreKeywords
 
   def initialize(android)
     @packageName = android['packageName']
-    @jsonKeyFileName = android['jsonKeyFileName']
+    @jsonKeyFilePath = android['jsonKeyFilePath']
     @notifyWebHookUrl = android['notifyWebHookUrl']
     @iconEmoji = android['iconEmoji']
     @username = android['username']
     @ignoreKeywords = android['ignoreKeywords']
-    @cacheFile = File.expand_path(".cache/.androidLastModified")
+    @cacheFile = "#{$lib}/.cache/.androidLastModified"
   end
 
   def run()
     app = Google::Apis::AndroidpublisherV3::AndroidPublisherService.new
     app.authorization = Google::Auth::ServiceAccountCredentials.make_creds(
-      json_key_io: File.open(File.expand_path(jsonKeyFileName)),
+      json_key_io: File.open(jsonKeyFilePath),
       scope: 'https://www.googleapis.com/auth/androidpublisher')
 
     lastModified = getLastModified()

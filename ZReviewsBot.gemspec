@@ -2,12 +2,11 @@ Gem::Specification.new do |gem|
     gem.authors       = ['ZhgChgLi']
     gem.description   = 'ZReviewsBot help you to monitor App Store and Google Play reviews and posts them to Slack.'
     gem.summary       = 'ZReviewsBot help you to monitor App Store and Google Play reviews and posts them to Slack.'
-    gem.homepage      = 'https://github.com/zhgchgli0718/ZReviewsBot'
-    gem.files         = Dir['locales/*']
+    gem.homepage      = 'https://github.com/ZhgChgLi/ZReviewsBot'
+    gem.files         = Dir['lib/**/*.*']
     gem.executables   = ['ZReviewsBot']
-    gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
     gem.name          = 'ZReviewsBot'
-    gem.version       = '0.0.1'
+    gem.version       = '1.0.2'
   
     gem.license       = "MIT"
   

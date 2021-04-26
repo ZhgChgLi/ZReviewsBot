@@ -1,9 +1,12 @@
 en:
+  config:
+    start: "撈取 %{platform} 平台評價, EX: -i /config.yml"
+    clear_cache: "Reset，清除 Cache"
+    make_config: "從範例產生 config.yml 檔案"
   error:
     config_file_not_found: "在路徑 %{path} 下找不到設定檔。"
     config_parameter_not_found: "在 %{path} 設定檔下找不到 %{parameter} 參數。"
     config_parameter_error: "在 %{path} 設定檔下 %{parameter} 參數設定錯誤。"
-    cache_dir_not_exists: "找不到指定的 Cache 目錄 %{path}。"
     specify_language_unsupport: "目前尚不支持 %{lang} 語系。"
     unknow_platform: "平台參數 %{platform} 輸入錯誤，請輸入 iOS 或 Android。"
     error_catch_footer: "撈取評價時發生錯誤，若是 iOS 平台可能是 <https://docs.fastlane.tools/best-practices/continuous-integration/#important-note-about-session-duration|2FA 登入 Session 過期問題> 請重新登入。"
