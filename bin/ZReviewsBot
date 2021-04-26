@@ -1,15 +1,37 @@
-require "./lib/AppStore"
-require "./lib/GooglePlay"
-require "./lib/Developer"
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+
+$lib = File.expand_path('../lib', File.dirname(__FILE__))
+$LOAD_PATH.unshift($lib)
+
+require "AppStore"
+require "GooglePlay"
+require "Developer"
 require 'I18n'
 
 def main()
     #Check Config File
-
-    I18n.load_path << Dir[File.expand_path("locales") + "/*.yml"]
+    I18n.load_path << Dir["#{$lib}/locales/*.yml"]
     I18n.default_locale = 'en'
+    
+    if ARGV[0] != nil
+        arg0 = ARGV[0]
+    else
+        arg0 = ''
+    end
 
-    configFilePath = File.expand_path("config/config.yml")
+    if arg0 == ''
+        puts 'Parameter Error!'
+        return
+    end
+
+    if arg0 == 'clear'
+        File.delete(File.expand_path(".cache/.iOSLastModified")) if File.exist?(File.expand_path(".cache/.iOSLastModified"))
+        File.delete(File.expand_path(".cache/.androidLastModified")) if File.exist?(File.expand_path(".cache/.androidLastModified"))
+        return
+    end
+
+    configFilePath = arg0
     if !File.exists?(configFilePath)
         raise I18n.t('error.config_file_not_found', :path => configFilePath)
     end
@@ -38,8 +60,8 @@ def main()
             end
         end
 
-        if ARGV[0] != nil
-            platform = ARGV[0].downcase
+        if ARGV[1] != nil
+            platform = ARGV[1].downcase
         else
             platform = ''
         end
@@ -109,7 +131,7 @@ def main()
                 developer.sendWelcomeMessageToSlack('iOS')
             end
         else
-            raise I18n.t('error.unknow_platform', :platform => ARGV[0])
+            raise I18n.t('error.unknow_platform', :platform => platform)
         end
     rescue => error
         developer.sendMessagesToSlack(error)

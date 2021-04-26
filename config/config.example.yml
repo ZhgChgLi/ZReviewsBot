@@ -10,7 +10,7 @@ iOS:
     username: 'ZReview Bot'
 android:
     packageName: 'Android Package Name'
-    jsonKeyFileName: 'android_publisher_key.json' #notice,if you change the file name also change in .gitignore
+    jsonKeyFileName: 'android_publisher_key.json'
     notifyWebHookUrl: 'slack webhook url for android new rewview message'
     ignoreKeywords: #list, Optional
         - 'Keyword 1'

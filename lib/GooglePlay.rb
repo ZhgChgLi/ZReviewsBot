@@ -1,7 +1,7 @@
 require 'google/apis/androidpublisher_v3'
 require 'googleauth'
-require "#{__dir__}/Slack.rb"
-require "#{__dir__}/Developer.rb"
+require "Slack.rb"
+require "Developer.rb"
 
 class GooglePlay
   attr_accessor :packageName, :jsonKeyFileName, :notifyWebHookUrl, :iconEmoji, :username, :cacheFile, :ignoreKeywords
@@ -19,7 +19,7 @@ class GooglePlay
   def run()
     app = Google::Apis::AndroidpublisherV3::AndroidPublisherService.new
     app.authorization = Google::Auth::ServiceAccountCredentials.make_creds(
-      json_key_io: File.open("#{__dir__}/../config/#{jsonKeyFileName}"),
+      json_key_io: File.open(File.expand_path(jsonKeyFileName)),
       scope: 'https://www.googleapis.com/auth/androidpublisher')
 
     lastModified = getLastModified()

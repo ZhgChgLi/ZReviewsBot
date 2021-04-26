@@ -1,7 +1,7 @@
 require "Spaceship"
-require "#{__dir__}/SpaceshipExtension.rb"
-require "#{__dir__}/Slack.rb"
-require "#{__dir__}/Developer.rb"
+require "SpaceshipExtension.rb"
+require "Slack.rb"
+require "Developer.rb"
 
 class AppStore
   attr_accessor :path, :appID, :appleID, :password, :notifyWebHookUrl, :iconEmoji, :username, :cacheFile, :ignoreKeywords

@@ -1,5 +1,5 @@
 require 'yaml'
-require './lib/Slack.rb'
+require 'Slack'
 
 class Developer
   attr_accessor :notifyWebHookUrl
