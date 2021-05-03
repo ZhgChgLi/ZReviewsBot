@@ -7,7 +7,7 @@ $LOAD_PATH.unshift($lib)
 require "AppStore"
 require "GooglePlay"
 require "Developer"
-require 'I18n'
+require 'i18n'
 require 'optparse'
 require 'fileutils'
 
