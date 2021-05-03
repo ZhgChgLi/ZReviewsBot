@@ -1,6 +1,6 @@
 $lib = File.expand_path('../lib', File.dirname(__FILE__))
 
-require "fastlane"
+require "spaceship"
 require "SpaceshipExtension.rb"
 require "Slack.rb"
 require "Developer.rb"
