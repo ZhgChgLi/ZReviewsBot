@@ -34,6 +34,7 @@ class GooglePlay
     remoteReviews.each { |remoteReview|
       result = {
         "reviewId" => remoteReview.review_id,
+        "reviewer" => remoteReview.author_name,
         "androidOsVersion" => remoteReview.comments[0].user_comment.android_os_version,
         "appVersionCode" => remoteReview.comments[0].user_comment.app_version_code,
         "appVersionName" => remoteReview.comments[0].user_comment.app_version_name,
@@ -86,7 +87,7 @@ class GooglePlay
       attachment.fallback = "#{stars}"
       attachment.title = "#{stars}"
       attachment.text = review["text"]
-      attachment.author_name = review["author_name"]
+      attachment.author_name = review["reviewer"]
       attachment.footer = "Android(#{review["androidOsVersion"]}) - v#{review["appVersionName"]}(#{review["appVersionCode"]}) - #{review["reviewerLanguage"]} - #{date} - <https://play.google.com/store/apps/details?id=#{packageName}&reviewId=#{review["reviewId"]}|Go To Google Play>"
       
       payload = Slack::Payload.new
