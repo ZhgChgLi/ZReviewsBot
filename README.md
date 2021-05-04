@@ -87,9 +87,7 @@ ZReviewsBot 為免費、開源專案，幫助您的 App 團隊自動追蹤 App S
 
 完成!
 
-## 使用 Github Action 部署 Schedule 自動機器人
-
-**[>> 點我查看](./doc/GithubAction.md)**
+## [免費使用 Github Action 部署 Schedule 自動機器人](./doc/GithubAction.md)
 
 # 注意事項
 
