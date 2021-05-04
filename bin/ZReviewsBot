@@ -98,8 +98,10 @@ def main()
                 if config.android['packageName'] == nil
                     raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.packageName')
                 end
-                if config.android['jsonKeyFilePath'] == nil
-                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.jsonKeyFilePath')
+                if config.android['jsonKeyFileName'] == nil
+                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.jsonKeyFileName')
+                else
+                    config.android['jsonKeyFilePath'] = "#{Pathname.new(configFilePath).dirname}/#{config.android['jsonKeyFileName']}"
                 end
                 if config.android['notifyWebHookUrl'] == nil
                     raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.notifyWebHookUrl')

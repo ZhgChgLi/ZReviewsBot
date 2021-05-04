@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
     gem.files         = Dir['lib/**/*.*']
     gem.executables   = ['ZReviewsBot']
     gem.name          = 'ZReviewsBot'
-    gem.version       = '1.0.3'
+    gem.version       = '1.0.5'
   
     gem.license       = "MIT"
   
