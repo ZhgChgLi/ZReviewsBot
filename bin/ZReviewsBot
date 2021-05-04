@@ -130,9 +130,6 @@ def main()
             File.delete("#{$lib}/.cache/.iOSLastModified") if File.exist?("#{$lib}/.cache/.iOSLastModified")
             File.delete("#{$lib}/.cache/.androidLastModified") if File.exist?("#{$lib}/.cache/.androidLastModified")
         end
-        opts.on('-m', '--make', I18n.t('config.make_config')) do |config|
-            FileUtils.cp("#{$lib}/config.yml", "#{__dir__}/config.yml")
-        end
         opts.on_tail("-h", "--help") do
             puts opts
             exit

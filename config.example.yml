@@ -11,7 +11,7 @@ iOS:
     username: 'ZReview Bot'
 android:
     packageName: 'Android Package Name'
-    jsonKeyFileName: 'android_publisher_key.json' # relative to config.yml file
+    jsonKeyFileName: 'android_publisher_key.json' # Google service account key file, relative to config.yml file
     notifyWebHookUrl: 'slack webhook url for android new rewview message'
     ignoreKeywords: #list, Optional
         - 'Keyword 1'
