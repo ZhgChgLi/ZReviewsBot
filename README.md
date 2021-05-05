@@ -114,4 +114,4 @@ ZReviewsBot 為免費、開源專案，幫助您的 App 團隊自動追蹤 App S
 
 
 
-[![Buy Me A Coffe](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://www.buymeacoffee.com/zhgchgli)
+[![Buy Me A Coffe](doc/images/buy.png)](https://www.buymeacoffee.com/zhgchgli)
