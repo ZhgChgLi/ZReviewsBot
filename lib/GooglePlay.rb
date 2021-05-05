@@ -67,13 +67,15 @@ class GooglePlay
     slack = Slack.new(notifyWebHookUrl)
   
     reviews.each { |review|
-      ignore = false
-      ignoreKeywords.each { |ignoreKeyword|
-        if review["text"].include? ignoreKeyword
-          ignore = true
-        end
-      }
-      next if ignore
+      if ignoreKeywords != nil
+        ignore = false
+        ignoreKeywords.each { |ignoreKeyword|
+          if review["text"].include? ignoreKeyword
+            ignore = true
+          end
+        }
+        next if ignore
+      end
 
       rating = review["starRating"]
       color = rating >= 4 ? "good" : (rating >= 2 ? "warning" : "danger")
