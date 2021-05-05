@@ -32,7 +32,7 @@ ZReviewsBot 為免費、開源專案，幫助您的 App 團隊自動追蹤 App S
 
 2. 更改檔名為 `config.yml`
 
-3. [Android 需要到後台匯出 Google service account key 檔案](https://binx.io/blog/2021/03/07/how-to-create-your-own-google-service-account-key-file/)，並將檔案改成 `android_publisher_key.json` 放在與 `config.yml` 同個目錄下
+3. [Android 需要到後台匯出 Google service account key 檔案](https://binx.io/blog/2021/03/07/how-to-create-your-own-google-service-account-key-file/)，並將檔案名改成 `android_publisher_key.json` 放在與 `config.yml` 同個目錄下
 
 4. 使用編輯器打開 `config.yml`
 
