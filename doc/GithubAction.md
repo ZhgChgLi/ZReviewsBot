@@ -1,5 +1,13 @@
 # 使用 Github Action 部署 Schedule 自動機器人
 
+## Flow
+
+![flow](images/flow.jpg)
+
+
+
+## Step by step
+
 1. 建立一個新 **Private** 專案 For ZReviewsBot
 
    ![1](./images/github_action/1.png?lastModify=1620143667)
@@ -57,6 +65,8 @@
    ```
 
    設定可參考[官方說明](https://docs.github.com/en/actions/reference/events-that-trigger-workflows)
+
+   請注意 Github Action 使用的是 UTC+0 時間而不是 UTC+8 台北時間。
 
 10. 都設定完成後，Push 回 Github
 
