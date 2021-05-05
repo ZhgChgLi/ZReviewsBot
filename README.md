@@ -87,25 +87,31 @@ ZReviewsBot 為免費、開源專案，幫助您的 App 團隊自動追蹤 App S
 
 完成!
 
-## [免費使用 Github Action 部署 Schedule 自動機器人](./doc/GithubAction.md)
+## 使用雲端服務部署排成機器人
 
-# 注意事項
+- [使用 Github Action 部署](./doc/GithubAction.md) (免費)
+
+## 注意事項
 
 - 登入資訊、帳號密碼、Key 均僅在本地使用，不會經過網路傳輸。
-- iOS 評價撈取的 Endpoint 身份驗證，因涉及蘋果全面實行 2 步驟登入；登入資訊最多只能保持 30 天，每 30 天都須重新完成 2步驟驗證登入，此段是直接依賴 fastlane spaceship 實現。
+- iOS 評價撈取的 Endpoint 需要身份驗證，因蘋果全面實行 2 步驟登入；登入資訊最多只能保持 30 天，每 30 天都須重新登入 & 2步驟驗證，此段是直接依賴 fastlane spaceship 實現。
 
 > Unfortunately there is nothing fastlane can do better in this regard, as these are technical limitations on how App Store Connect sessions are handled.
 >
 > https://docs.fastlane.tools/best-practices/continuous-integration/#important-note-about-session-duration
 
-## 誰在使用？
+## FAQ
 
-[![Pinkoi Logo](https://cdn04.pinkoi.com/pinkoi.site/general/logo/pinkoi_logo_2019.svg)](https://www.pinkoi.com/) 
+- [iOS 評價撈取失敗處理](doc/iOSSessionInvaild.md)
 
 ## TODO
 
 - ▢ [英文說明](./doc/en/README.md)
 
+## 誰在使用？
+
+[![Pinkoi Logo](doc/images/use/pinkoi.jpg)](https://www.pinkoi.com/) 
 
 
-![[Buy Me A Coffe](https://www.buymeacoffee.com/zhgchgli)](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)
+
+[![Buy Me A Coffe](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://www.buymeacoffee.com/zhgchgli)
