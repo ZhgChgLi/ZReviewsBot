@@ -63,13 +63,15 @@ class AppStore
     slack = Slack.new(notifyWebHookUrl)
     
     reviews.each { |review|
-      ignore = false
-      ignoreKeywords.each { |ignoreKeyword|
-        if review["review"].include? ignoreKeyword
-          ignore = true
-        end
-      }
-      next if ignore
+      if ignoreKeywords != nil
+        ignore = false
+        ignoreKeywords.each { |ignoreKeyword|
+          if review["review"].include? ignoreKeyword
+            ignore = true
+          end
+        }
+        next if ignore
+      end
 
       rating = review["rating"].to_i
       color = rating >= 4 ? "good" : (rating >= 2 ? "warning" : "danger")
