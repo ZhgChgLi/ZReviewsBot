@@ -9,7 +9,7 @@ zh-tw:
     config_parameter_error: "在 %{path} 設定檔下 %{parameter} 參數設定錯誤。"
     specify_language_unsupport: "目前尚不支持 %{lang} 語系。"
     unknow_platform: "平台參數 %{platform} 輸入錯誤，請輸入 iOS 或 Android。"
-    error_catch_footer: "撈取評價時發生錯誤，若是 iOS 平台可能是 <https://docs.fastlane.tools/best-practices/continuous-integration/#important-note-about-session-duration|2FA 登入 Session 過期問題> 請重新登入。"
+    error_catch_footer: "撈取評價時發生錯誤，若是 iOS 平台可能是 <https://github.com/ZhgChgLi/ZReviewsBot/blob/main/doc/iOSSessionInvaild.md|2FA 登入 Session 過期問題> 請重新登入。"
   welcome:
     title: "初始化成功！歡迎使用 ZReviews Bot!"
     text: "%{platform} 平台初始化成功！\n 新評價即將開始湧入，有任何問題歡迎使用以下連結與我聯絡。"
