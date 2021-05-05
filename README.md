@@ -4,6 +4,8 @@ ZReviewsBot 為免費、開源專案，幫助您的 App 團隊自動追蹤 App S
 
 ![2](doc/images/2.png)
 
+[![Buy Me A Coffe](doc/images/buy.png)](https://www.buymeacoffee.com/zhgchgli)
+
 ## 特色
 
 - ✅ 使用更新、更可靠的 API Endpoint 追蹤 iOS App 評價 ([技術細節](https://medium.com/zrealm-ios-dev/appstore-apps-reviews-bot-%E9%82%A3%E4%BA%9B%E4%BA%8B-cb0c68c33994))
@@ -111,7 +113,3 @@ ZReviewsBot 為免費、開源專案，幫助您的 App 團隊自動追蹤 App S
 ## 誰在使用？
 
 [![Pinkoi Logo](doc/images/use/pinkoi.jpg)](https://www.pinkoi.com/) 
-
-
-
-[![Buy Me A Coffe](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://www.buymeacoffee.com/zhgchgli)
