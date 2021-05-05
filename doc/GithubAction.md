@@ -23,9 +23,11 @@
 
 4. 等待 Clone 完成
 
-![4](images/github_action/4.png)
+   ![4](images/github_action/4.png)
 
-5. 完成！![5](images/github_action/5.png)
+5. 完成!
+
+   ![5](images/github_action/5.png)
 
 6. Clone 下您的專案
 
