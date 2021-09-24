@@ -91,7 +91,10 @@ ZReviewsBot 為免費、開源專案，幫助您的 App 團隊自動追蹤 App S
 
 ## 使用雲端服務部署排成機器人
 
-- [使用 Github Action 部署](./doc/GithubAction.md) (免費)
+iOS 因 Apple Store Connect 會驗證 Session 產生地與執行地有無異動，所以無法在本地產好 Session 然後給 Cloud Server 使用。
+![Screen Shot 2021-09-24 at 6 06 33 PM](https://user-images.githubusercontent.com/33706588/134657612-c2f90bc2-43c0-465d-a4e0-08e0403ab359.png)
+
+
 
 ## 注意事項
 
@@ -106,9 +109,6 @@ ZReviewsBot 為免費、開源專案，幫助您的 App 團隊自動追蹤 App S
 
 - [iOS 評價撈取失敗處理](doc/iOSSessionInvaild.md)
 
-## TODO
-
-- ▢ [英文說明](./doc/en/README.md)
 
 ## 誰在使用？
 
