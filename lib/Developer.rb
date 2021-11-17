@@ -2,10 +2,11 @@ require 'yaml'
 require 'Slack'
 
 class Developer
-  attr_accessor :notifyWebHookUrl
+  attr_accessor :notifySlackBotToken, :notifySlackBotChannelID
 
     def initialize(setting)
-        @notifyWebHookUrl = setting['developerNotifyWebHookUrl']
+        @notifySlackBotToken = setting['developerNotifySlackBotToken']
+        @notifySlackBotChannelID = setting['developerNotifySlackBotChannelID']
     end
 
     def sendMessagesToSlack(error)
@@ -27,7 +28,7 @@ class Developer
     end
 
     def sendWelcomeMessageToSlack(platform)
-        slack = Slack.new(notifyWebHookUrl)
+        slack = Slack.new(notifySlackBotToken)
         attachment = Slack::Payload::Attachment.new
         attachment.color = "good"
         attachment.fallback = I18n.t('welcome.title')
@@ -36,9 +37,8 @@ class Developer
         attachment.footer = "<https://github.com/zhgchgli0718/ZReviewsBot| Github> - <http://zhgchg.li| ZhgChg.Li>"
         
         payload = Slack::Payload.new
+        payload.channel = notifySlackBotChannelID
         payload.attachments = [attachment]
-        payload.username = 'ZReviewsBot'
-        payload.icon_emoji = ':ghost:'
       
         slack.pushMessage(payload)
     end

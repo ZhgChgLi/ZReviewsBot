@@ -6,15 +6,14 @@ require "Slack.rb"
 require "Developer.rb"
 
 class AppStore
-  attr_accessor :path, :appID, :appleID, :password, :notifyWebHookUrl, :iconEmoji, :username, :cacheFile, :ignoreKeywords
+  attr_accessor :path, :appID, :appleID, :password, :notifySlackBotToken, :notifySlackBotChannelID, :cacheFile, :ignoreKeywords
 
   def initialize(iOS)
     @appID = iOS['appID']
     @appleID = iOS['appleID']
     @password = iOS['password']
-    @notifyWebHookUrl = iOS['notifyWebHookUrl']
-    @iconEmoji = iOS['iconEmoji']
-    @username = iOS['username']
+    @notifySlackBotToken = iOS['notifySlackBotToken']
+    @notifySlackBotChannelID = iOS['notifySlackBotChannelID']
     @ignoreKeywords = iOS['ignoreKeywords']
     @cacheFile = "#{$lib}/.cache/.iOSLastModified"
   end
@@ -60,7 +59,7 @@ class AppStore
   end
 
   def sendMessagesToSlack(reviews)
-    slack = Slack.new(notifyWebHookUrl)
+    slack = Slack.new(notifySlackBotToken)
     
     reviews.each { |review|
       if ignoreKeywords != nil
@@ -97,8 +96,7 @@ class AppStore
       attachment.footer = "iOS - v#{review["appVersionString"]} - #{review["storeFront"]} - #{date} - <https://appstoreconnect.apple.com/apps/557252416/appstore/activity/ios/ratingsResponses|Go To App Store>"
       
       payload = Slack::Payload.new
-      payload.icon_emoji = iconEmoji
-      payload.username = username
+      payload.channel = notifySlackBotChannelID
       payload.attachments = [attachment]
 
       slack.pushMessage(payload)

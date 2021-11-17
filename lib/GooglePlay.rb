@@ -6,14 +6,13 @@ require "Slack.rb"
 require "Developer.rb"
 
 class GooglePlay
-  attr_accessor :packageName, :jsonKeyFilePath, :notifyWebHookUrl, :iconEmoji, :username, :cacheFile, :ignoreKeywords
+  attr_accessor :packageName, :jsonKeyFilePath, :notifySlackBotToken, :notifySlackBotChannelID, :cacheFile, :ignoreKeywords
 
   def initialize(android)
     @packageName = android['packageName']
     @jsonKeyFilePath = android['jsonKeyFilePath']
-    @notifyWebHookUrl = android['notifyWebHookUrl']
-    @iconEmoji = android['iconEmoji']
-    @username = android['username']
+    @notifySlackBotToken = android['notifySlackBotToken']
+    @notifySlackBotChannelID = android['notifySlackBotChannelID']
     @ignoreKeywords = android['ignoreKeywords']
     @cacheFile = "#{$lib}/.cache/.androidLastModified"
   end
@@ -64,7 +63,7 @@ class GooglePlay
   end
 
   def sendMessagesToSlack(reviews)
-    slack = Slack.new(notifyWebHookUrl)
+    slack = Slack.new(notifySlackBotToken, notifySlackBotChannel)
   
     reviews.each { |review|
       if ignoreKeywords != nil
@@ -93,8 +92,7 @@ class GooglePlay
       attachment.footer = "Android(#{review["androidOsVersion"]}) - v#{review["appVersionName"]}(#{review["appVersionCode"]}) - #{review["reviewerLanguage"]} - #{date} - <https://play.google.com/store/apps/details?id=#{packageName}&reviewId=#{review["reviewId"]}|Go To Google Play>"
       
       payload = Slack::Payload.new
-      payload.icon_emoji = iconEmoji
-      payload.username = username
+      payload.channel = notifySlackBotChannelID
       payload.attachments = [attachment]
 
       slack.pushMessage(payload)

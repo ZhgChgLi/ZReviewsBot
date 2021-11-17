@@ -1,9 +1,9 @@
 require 'net/http'
 
 class Slack
-    attr_accessor :webHookUrl
+    attr_accessor :notifySlackBotToken
     class Payload
-        attr_accessor :icon_emoji, :username, :attachments
+        attr_accessor :channel, :attachments
         class Attachment
             attr_accessor :pretext, :color, :fallback, :title, :text, :author_name, :footer
         
@@ -26,8 +26,7 @@ class Slack
 
         def as_json(options={})
         {
-            icon_emoji: @icon_emoji,
-            username: @username,
+            channel: @channel,
             attachments: @attachments
         }
         end
@@ -37,15 +36,15 @@ class Slack
         end
     end
 
-    def initialize(webHookUrl)
-        @webHookUrl = webHookUrl
+    def initialize(notifySlackBotToken)
+        @notifySlackBotToken = notifySlackBotToken
     end
 
     def pushMessage(payload)
-        uri = URI(webHookUrl)
+        uri = URI("https://slack.com/api/chat.postMessage")
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
-        req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type': 'application/json'})
+        req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type': 'application/json', 'Authorization': "Bearer #{notifySlackBotToken}"})
         req.body = payload.to_json
         res = http.request(req)
     end
