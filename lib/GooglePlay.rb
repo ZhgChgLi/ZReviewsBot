@@ -63,7 +63,7 @@ class GooglePlay
   end
 
   def sendMessagesToSlack(reviews)
-    slack = Slack.new(notifySlackBotToken, notifySlackBotChannel)
+    slack = Slack.new(notifySlackBotToken)
   
     reviews.each { |review|
       if ignoreKeywords != nil
