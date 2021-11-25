@@ -10,7 +10,7 @@ class Developer
     end
 
     def sendMessagesToSlack(error)
-        slack = Slack.new(notifyWebHookUrl)
+        slack = Slack.new(notifySlackBotToken)
         attachment = Slack::Payload::Attachment.new
         attachment.color = "danger"
         attachment.fallback = "ZReviewsBot Error accuracy!"
@@ -19,9 +19,8 @@ class Developer
         attachment.footer = I18n.t('error.error_catch_footer')
         
         payload = Slack::Payload.new
+        payload.channel = notifySlackBotChannelID
         payload.attachments = [attachment]
-        payload.username = 'ZReviewsBot'
-        payload.icon_emoji = ':warning:'
       
         slack.pushMessage(payload)
         puts error
