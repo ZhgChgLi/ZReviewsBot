@@ -75,7 +75,11 @@ def main()
                     raise I18n.t('error.config_parameter_error', :path => configFilePath, :parameter => 'iOS.ignoreKeywords')
                 end
 
-                appStore = AppStore.new(config.iOS)
+                if config.setting['googleTranslateAPIJsonKeyFileName'] != nil
+                    config.setting['googleTranslateAPIJsonKeyFileName'] = "#{Pathname.new(configFilePath).dirname}/#{config.setting['googleTranslateAPIJsonKeyFileName']}"
+                end
+
+                appStore = AppStore.new(config)
                 result = appStore.run()
 
                 if result == 0
@@ -111,7 +115,11 @@ def main()
                     raise I18n.t('error.config_parameter_error', :path => configFilePath, :parameter => 'android.ignoreKeywords')
                 end
 
-                appStore = GooglePlay.new(config.android)
+                if config.setting['googleTranslateAPIJsonKeyFileName'] != nil
+                    config.setting['googleTranslateAPIJsonKeyFileName'] = "#{Pathname.new(configFilePath).dirname}/#{config.setting['googleTranslateAPIJsonKeyFileName']}"
+                end
+
+                appStore = GooglePlay.new(config)
                 result = appStore.run()
 
                 if result == 0

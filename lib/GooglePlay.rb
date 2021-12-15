@@ -6,9 +6,13 @@ require "Slack.rb"
 require "Developer.rb"
 
 class GooglePlay
-  attr_accessor :packageName, :jsonKeyFilePath, :notifySlackBotToken, :notifySlackBotChannelID, :cacheFile, :ignoreKeywords
+  attr_accessor :packageName, :jsonKeyFilePath, :notifySlackBotToken, :notifySlackBotChannelID, :cacheFile, :ignoreKeywords, :googleTranslateAPIJsonKeyFileName, :googleTranslateTargetLang
 
-  def initialize(android)
+  def initialize(config)
+    android = config.android
+    @googleTranslateAPIJsonKeyFileName = config.setting['googleTranslateAPIJsonKeyFileName']
+    @googleTranslateTargetLang = config.setting['googleTranslateTargetLang']
+
     @packageName = android['packageName']
     @jsonKeyFilePath = android['jsonKeyFilePath']
     @notifySlackBotToken = android['notifySlackBotToken']
@@ -83,19 +87,43 @@ class GooglePlay
       stars = "★" * rating + "☆" * (5 - rating)
 
       attachment = Slack::Payload::Attachment.new
-
       attachment.color = color
-      attachment.fallback = "#{stars}"
-      attachment.title = "#{stars}"
-      attachment.text = review["text"]
       attachment.author_name = review["reviewer"]
       attachment.footer = "Android(#{review["androidOsVersion"]}) - v#{review["appVersionName"]}(#{review["appVersionCode"]}) - #{review["reviewerLanguage"]} - #{date} - <https://play.google.com/store/apps/details?id=#{packageName}&reviewId=#{review["reviewId"]}|Go To Google Play>"
+
+      needPostOriginal = false
+      if review["reviewerLanguage"] != "zh-Hant" && googleTranslateAPIJsonKeyFileName != nil
+        googleTranslate = GoogleTranslate.new(googleTranslateAPIJsonKeyFileName, googleTranslateTargetLang)
+
+        attachment.fallback = "#{stars}"
+        attachment.title = "[Translate by Google] - #{stars}"
+        attachment.text = googleTranslate.translate(review["text"])
+
+        needPostOriginal = true
+      else
+        attachment.fallback = "#{stars}"
+        attachment.title = "#{stars}"
+        attachment.text = review["text"]
+      end
       
       payload = Slack::Payload.new
       payload.channel = notifySlackBotChannelID
       payload.attachments = [attachment]
 
-      slack.pushMessage(payload)
+      result = slack.pushMessage(payload)
+
+      if result["ok"] == true && result["ts"] != nil && needPostOriginal
+        ts = result["ts"]
+        
+        attachment.fallback = "#{stars}"
+        attachment.title = "#{stars}"
+        attachment.text = review["text"]
+
+        attachment.footer = "Original message."
+
+        payload.thread_ts = ts
+        slack.pushMessage(payload)
+      end
     }
  
   end

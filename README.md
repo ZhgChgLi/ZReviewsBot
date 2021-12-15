@@ -60,6 +60,8 @@ ZReviewsBot 為免費、開源專案，幫助您的 App 團隊自動追蹤 App S
            - 'Keyword 2'
    setting:
        lang: "en"
+       googleTranslateAPIJsonKeyFileName: 'gcp-translate-api-key.json' # Google Translate api key, Optional
+       googleTranslateTargetLang: 'zh-TW' # Google Translate api traget lang, Optional
        developerNotifySlackBotToken: 'slack bot token for debug message'
        developerNotifySlackBotChannelID: 'slack bot target channel id for debug message'
    ```
