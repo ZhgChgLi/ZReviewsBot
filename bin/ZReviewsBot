@@ -21,8 +21,12 @@ def loadConfig(configFilePath)
         raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'setting')
     end
 
-    if config.setting['developerNotifyWebHookUrl'] == nil
-        raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'setting.developerNotifyWebHookUrl')
+    if config.setting['developerNotifySlackBotToken'] == nil
+        raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'setting.developerNotifySlackBotToken')
+    end
+
+    if config.setting['developerNotifySlackBotChannelID'] == nil
+        raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'setting.developerNotifySlackBotChannelID')
     end
 
     if config.setting['lang'] != nil
@@ -61,23 +65,21 @@ def main()
                 if config.iOS['password'] == nil
                     raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.password')
                 end
-                if config.iOS['notifyWebHookUrl'] == nil
-                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.notifyWebHookUrl')
+                if config.iOS['notifySlackBotToken'] == nil
+                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.notifySlackBotToken')
                 end
-                if config.iOS['iconEmoji'] == nil
-                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.iconEmoji')
-                end
-                if config.iOS['username'] == nil
-                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.username')
-                end
-                if config.iOS['username'] == nil
-                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.username')
+                if config.iOS['notifySlackBotChannelID'] == nil
+                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'iOS.notifySlackBotChannelID')
                 end
                 if config.iOS['ignoreKeywords'] != nil and !config.iOS['ignoreKeywords'].kind_of?(Array)
                     raise I18n.t('error.config_parameter_error', :path => configFilePath, :parameter => 'iOS.ignoreKeywords')
                 end
 
-                appStore = AppStore.new(config.iOS)
+                if config.setting['googleTranslateAPIJsonKeyFileName'] != nil
+                    config.setting['googleTranslateAPIJsonKeyFileName'] = "#{Pathname.new(configFilePath).dirname}/#{config.setting['googleTranslateAPIJsonKeyFileName']}"
+                end
+
+                appStore = AppStore.new(config)
                 result = appStore.run()
 
                 if result == 0
@@ -103,20 +105,21 @@ def main()
                 else
                     config.android['jsonKeyFilePath'] = "#{Pathname.new(configFilePath).dirname}/#{config.android['jsonKeyFileName']}"
                 end
-                if config.android['notifyWebHookUrl'] == nil
-                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.notifyWebHookUrl')
+                if config.android['notifySlackBotToken'] == nil
+                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.notifySlackBotToken')
                 end
-                if config.android['iconEmoji'] == nil
-                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.iconEmoji')
-                end
-                if config.android['username'] == nil
-                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.username')
+                if config.android['notifySlackBotChannelID'] == nil
+                    raise I18n.t('error.config_parameter_not_found', :path => configFilePath, :parameter => 'android.notifySlackBotChannelID')
                 end
                 if config.android['ignoreKeywords'] != nil and !config.android['ignoreKeywords'].kind_of?(Array)
                     raise I18n.t('error.config_parameter_error', :path => configFilePath, :parameter => 'android.ignoreKeywords')
                 end
 
-                appStore = GooglePlay.new(config.android)
+                if config.setting['googleTranslateAPIJsonKeyFileName'] != nil
+                    config.setting['googleTranslateAPIJsonKeyFileName'] = "#{Pathname.new(configFilePath).dirname}/#{config.setting['googleTranslateAPIJsonKeyFileName']}"
+                end
+
+                appStore = GooglePlay.new(config)
                 result = appStore.run()
 
                 if result == 0

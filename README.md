@@ -43,25 +43,27 @@ ZReviewsBot 為免費、開源專案，幫助您的 App 團隊自動追蹤 App S
    ```YAML
    iOS:
        appID: 'iOS APP ID'
-       appleID: 'iOS APP 開發者帳號 (email)'
-       password: 'iOS APP 開發者帳號密碼'
-       notifyWebHookUrl: 'iOS 最新評價通知的 slack webhook url'
-       ignoreKeywords: #要忽略通知的關鍵字，不使用可移除此區塊
-           - '博彩'
-       iconEmoji: ':dog:' #推送 iOS 通知時的 slack bot 大頭貼
-       username: 'ZReview Bot' #推送 iOS 通知時的 slack bot 名稱
+       appleID: 'APP Store Connect Apple ID (email)'
+       password: 'APP Store Connect Apple ID Password'
+       notifySlackBotToken: 'slack bot token for iOS new review message'
+       notifySlackBotChannelID: 'slack bot target channel id for iOS new review message'
+       ignoreKeywords: #list, Optional
+           - 'Keyword 1'
+           - 'Keyword 2'
    android:
        packageName: 'Android Package Name'
-       jsonKeyFileName: 'android_publisher_key.json' # Google service account key 檔案名稱，需與 config.yml 在同個目錄下
-       notifyWebHookUrl: 'Android 最新評價通知的 slack webhook url，可與 iOS 相同'
-       ignoreKeywords: #要忽略通知的關鍵字，不使用可移除此區塊
-           - '博彩'
-           - '情色'
-       iconEmoji: ':dog:' #推送 android 通知時的 slack bot 大頭貼
-       username: 'ZReview Bot' #推送 android 通知時的 slack bot 名稱
+       jsonKeyFileName: 'android_publisher_key.json' # Google service account key file, relative to config.yml file
+       notifySlackBotToken: 'slack bot token for android new review message'
+       notifySlackBotChannelID: 'slack bot target channel id for android new review message'
+       ignoreKeywords: #list, Optional
+           - 'Keyword 1'
+           - 'Keyword 2'
    setting:
-       lang: "en" # 訊息語系
-       developerNotifyWebHookUrl: '接收 debug/爬取失敗/認證失效的 slack webhook url'
+       lang: "en"
+       googleTranslateAPIJsonKeyFileName: 'gcp-translate-api-key.json' # Google Translate api key, Optional
+       googleTranslateTargetLang: 'zh-TW' # Google Translate api traget lang, Optional
+       developerNotifySlackBotToken: 'slack bot token for debug message'
+       developerNotifySlackBotChannelID: 'slack bot target channel id for debug message'
    ```
 
    完成!
