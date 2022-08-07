@@ -1,5 +1,12 @@
 # ZReviewsBot
 
+## TL;DR
+
+Deprecated, try the new [ZReviewTender](https://github.com/ZhgChgLi/ZReviewTender), powered by brand new [App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi/list_all_customer_reviews_for_an_app).
+
+
+-----
+
 ZReviewsBot 為免費、開源專案，幫助您的 App 團隊自動追蹤 App Store (iOS) 及 Google Play (Android) 平台上 App 的最新評價，並發送到指定 Slack Channel 方便您即時了解當前 App 狀況。
 
 ![2](doc/images/2.png)
